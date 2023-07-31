@@ -1,10 +1,10 @@
-import khttp.get
 import org.json.JSONArray
 import org.json.JSONObject
 
 class Rutube{
     var knownVideos: JSONArray = JSONArray()
     var channelId: Int = 0
+    val requests: AugUtils.Companion.Requests = AugUtils.Companion.Requests()
 
     val videosRegex = Regex("wdp-card-description-module__descriptionWrapper wdp-card-description-module__fullwidthDescription\">(.+?)<\\/a>")
     val urlRegex = Regex("href=\"(.+?)\" title")
@@ -14,7 +14,7 @@ class Rutube{
     fun getNewVideos(): MutableList<Map<String, String>>{
         val newVideos = mutableListOf<Map<String, String>>()
 
-        val response = get("https://rutube.ru/channel/$channelId/videos/").text
+        val response = requests.get("https://rutube.ru/channel/$channelId/videos/").text
 
         val videos = videosRegex.findAll(response)
         for (video in videos.toList()){

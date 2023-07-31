@@ -1,5 +1,3 @@
-import khttp.post
-import khttp.get
 import VKAPI
 import Rutube
 import org.json.*
@@ -17,6 +15,10 @@ fun main(args: Array<String>) {
     val file = File("config.json")
     if (file.exists()){
         config = JSONObject(file.readText())
+        if (!config.has("vkplay_isOnline")){
+            config.put("vkplay_isOnline", false)
+            AugUtils.writeFile("config.json", config.toString())
+        }
 
         vkapi.accessToken = config.getString("vk_token")
         rutube.channelId = config.getInt("rutube_channel_id")
@@ -52,6 +54,7 @@ fun main(args: Array<String>) {
         }
         print("Раз в сколько минут обновлять канал?\n$ ")
         config.put("update_timer", readln().toFloat())
+        config.put("vkplay_isOnline", false)
 
         AugUtils.writeFile("config.json", config.toString())
     }
@@ -68,6 +71,12 @@ fun main(args: Array<String>) {
     //rutube.channelId = 25735130
 
     println("")
+    val vkPlay = VKPlay()
+    val thread = Thread{
+        vkPlay.startCheck()
+    }
+    thread.start()
+
     while (true){
         val newVideos = rutube.getNewVideos()
 

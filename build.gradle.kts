@@ -10,13 +10,12 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri("https://jitpack.io")
-    }
 }
 
 dependencies {
-    implementation("com.github.jkcclemens:khttp:master-SNAPSHOT")
+    implementation("org.json:json:20220924")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+
 }
 
 tasks.withType<KotlinCompile> {

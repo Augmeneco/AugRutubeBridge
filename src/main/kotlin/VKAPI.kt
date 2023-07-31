@@ -1,21 +1,20 @@
-import khttp.post
-import khttp.get
 import org.json.*
 
 class VKAPI {
     var accessToken: String = ""
     val version: String = "5.131"
+    val requests: AugUtils.Companion.Requests = AugUtils.Companion.Requests()
 
-    fun call(method: String, params: MutableMap<String, Any>): Any{
+    fun call(method: String, params: MutableMap<Any, Any>): Any{
         //println("Call $method")
 
         params["v"] = version
         params["access_token"] = accessToken
 
-        val response = post(
+        val response = JSONObject(requests.post(
             "https://api.vk.com/method/$method",
-            data = params
-        ).jsonObject
+            params
+        ).text)
 
         if (response.has("error")){
             val errorObject = response.getJSONObject("error")
